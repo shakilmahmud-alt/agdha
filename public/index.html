@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive multi-page document viewer.">
+  <title>Document Viewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Navigation Arrows -->
+  <!-- Left / Previous Arrow: Hidden on Page 1, Visible on Page 2 & 3 -->
+  <button id="prevPageBtn" class="nav-arrow prev-arrow hidden" aria-label="Previous Page" data-tooltip="Previous">
+    <svg viewBox="0 0 24 24">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+
+  <!-- Right / Next Arrow: Visible on Page 1 & 2, Hidden on Page 3 -->
+  <button id="nextPageBtn" class="nav-arrow next-arrow" aria-label="Next Page" data-tooltip="Next">
+    <svg viewBox="0 0 24 24">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+
+  <!-- Main Document Stage -->
+  <main class="viewer-main">
+    <div class="document-stage">
+      <div class="document-card">
+        
+        
+        <!-- Page 1: Australian Government Visa Document -->
+        <section id="page-1" class="document-page active" aria-label="Document Page 1">
+          <!-- QR Code placed above document on one side -->
+
+          <div class="image-canvas">
+            <img 
+              src="/assets/images/page1.jpg" 
+              alt="Australian Government Department of Home Affairs - Temporary Skill Shortage (subclass 482) visa application" 
+              class="page-display-img"
+              id="docImg1"
+            />
+          </div>
+        </section>
+
+        <!-- Page 2: Employment Contract Page 1 -->
+        <section id="page-2" class="document-page" aria-label="Document Page 2">
+          <div class="image-canvas">
+            <img 
+              src="/assets/images/page2.jpg" 
+              alt="Employment Contract - Page 1 terms, workplace, working hours, salary and benefits" 
+              class="page-display-img"
+              id="docImg2"
+            />
+          </div>
+        </section>
+
+        <!-- Page 3: Employment Contract Page 2 -->
+        <section id="page-3" class="document-page" aria-label="Document Page 3">
+          <div class="image-canvas">
+            <img 
+              src="/assets/images/page3.jpg" 
+              alt="Employment Contract - Page 2 position and terms" 
+              class="page-display-img"
+              id="docImg3"
+            />
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating Bottom Control Dock -->
+  <nav class="control-dock" aria-label="Viewer Controls">
+    <span class="page-counter-badge" id="pageCounter">Page 1 of 3</span>
+    
+    <div class="pagination-dots" aria-label="Page dots">
+      <span class="page-dot active" data-page="1" title="Go to Page 1"></span>
+      <span class="page-dot" data-page="2" title="Go to Page 2"></span>
+      <span class="page-dot" data-page="3" title="Go to Page 3"></span>
+    </div>
+
+    <div class="dock-separator"></div>
+
+    <div class="dock-tools">
+      <button class="tool-button" id="zoomOutBtn" title="Zoom Out (-)" aria-label="Zoom Out">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          <line x1="8" y1="11" x2="14" y2="11"></line>
+        </svg>
+      </button>
+
+      <button class="tool-button" id="zoomResetBtn" title="Reset Zoom" aria-label="Reset Zoom">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+          <path d="M21 3v5h-5"></path>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+          <path d="M3 21v-5h5"></path>
+        </svg>
+      </button>
+
+      <button class="tool-button" id="zoomInBtn" title="Zoom In (+)" aria-label="Zoom In">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          <line x1="11" y1="8" x2="11" y2="14"></line>
+          <line x1="8" y1="11" x2="14" y2="11"></line>
+        </svg>
+      </button>
+
+      <button class="tool-button" id="fullscreenBtn" title="Toggle Fullscreen (F)" aria-label="Toggle Fullscreen">
+        <svg viewBox="0 0 24 24">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
