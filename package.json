@@ -1,0 +1,19 @@
+{
+  "name": "arif-document-viewer",
+  "version": "1.0.0",
+  "description": "Interactive multi-page document viewer with arrow navigation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "document-viewer",
+    "page-flip",
+    "navigation"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

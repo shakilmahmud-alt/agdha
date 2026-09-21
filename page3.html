@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Employment Contract Page 2 - Position and Terms">
+  <title>Page 3 - Employment Contract (Part 2)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Only PREV arrow is present on Page 3 -->
+  <a href="page2.html" class="nav-arrow prev-arrow" aria-label="Go to Page 2" data-tooltip="Previous Page">
+    <svg viewBox="0 0 24 24">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </a>
+
+  <!-- Document Viewport -->
+  <main class="viewer-main">
+    <div class="document-stage">
+      <div class="document-card">
+        <div class="document-page active">
+          <div class="image-canvas">
+            <img 
+              src="assets/images/page3.jpg" 
+              alt="Employment Contract - Position, Terms, Probationary Period" 
+              class="page-display-img"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Control Dock -->
+  <nav class="control-dock" aria-label="Page Controls">
+    <span class="page-counter-badge">Page 3 of 3</span>
+    <div class="pagination-dots">
+      <a href="page1.html" class="page-dot" title="Page 1"></a>
+      <a href="page2.html" class="page-dot" title="Page 2"></a>
+      <a href="page3.html" class="page-dot active" title="Page 3"></a>
+    </div>
+  </nav>
+
+  <script>
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        window.location.href = 'page2.html';
+      }
+    });
+  </script>
+</body>
+</html>

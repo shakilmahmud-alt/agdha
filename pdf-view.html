@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Continuous scroll PDF view of Visa Application and Employment Contract documents.">
+  <title>Document Viewer - Continuous PDF Scroll View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background: #0d121f;
+      background-image: radial-gradient(circle at 50% 10%, #1a233a 0%, #0d121f 90%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      margin: 0;
+      user-select: auto;
+    }
+
+    /* PDF Viewer Top Sticky Toolbar */
+    .pdf-toolbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .back-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f1f5f9;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+
+    .back-link-btn:hover {
+      background: #3b82f6;
+      border-color: #60a5fa;
+      color: #ffffff;
+      transform: translateX(-2px);
+    }
+
+    .doc-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .doc-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .doc-pages-info {
+      font-size: 0.74rem;
+      color: #94a3b8;
+    }
+
+    .toolbar-center {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pdf-page-pill {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 5px 14px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+
+    .tool-btn.primary {
+      background: #3b82f6;
+      border-color: #60a5fa;
+      color: #ffffff;
+    }
+
+    .tool-btn.primary:hover {
+      background: #2563eb;
+    }
+
+    .tool-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Scrollable Container */
+    .pdf-scroll-viewport {
+      width: 100%;
+      max-width: 860px;
+      padding: 32px 16px 80px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      align-items: center;
+      transition: max-width 0.3s ease;
+    }
+
+    .pdf-page-wrapper {
+      position: relative;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+      scroll-margin-top: 80px;
+    }
+
+    .page-header-ribbon {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 6px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .pdf-page-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+    }
+
+    .page-footer-ribbon {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      padding: 6px 16px;
+      text-align: right;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .pdf-toolbar {
+        padding: 10px 14px;
+      }
+      .doc-pages-info {
+        display: none;
+      }
+      .doc-name {
+        font-size: 0.82rem;
+      }
+      .tool-btn span {
+        display: none;
+      }
+      .pdf-scroll-viewport {
+        padding: 16px 8px 60px 8px;
+        gap: 20px;
+      }
+    }
+
+    @media print {
+      .pdf-toolbar {
+        display: none !important;
+      }
+      body {
+        background: #ffffff !important;
+      }
+      .pdf-scroll-viewport {
+        max-width: 100% !important;
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+      .pdf-page-wrapper {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        page-break-after: always;
+      }
+      .page-header-ribbon, .page-footer-ribbon {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top PDF Control Toolbar -->
+  <header class="pdf-toolbar">
+    <div class="toolbar-left">
+      <a href="index.html" class="back-link-btn" title="Back to Slide Viewer">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Slides View</span>
+      </a>
+      <div class="doc-meta">
+        <span class="doc-name">Visa &amp; Employment Agreement</span>
+        <span class="doc-pages-info">Continuous PDF Scroll Mode ? 3 Pages</span>
+      </div>
+    </div>
+
+    <div class="toolbar-center">
+      <span class="pdf-page-pill" id="pageIndicator">Page 1 of 3</span>
+    </div>
+
+    <div class="toolbar-right">
+      <button class="tool-btn" id="zoomOutBtn" title="Zoom Out">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+      </button>
+
+      <button class="tool-btn" id="zoomInBtn" title="Zoom In">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+      </button>
+
+      <button class="tool-btn primary" id="printBtn" title="Print or Save as PDF" onclick="window.print()">
+        <svg viewBox="0 0 24 24">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        <span>Print / Save PDF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Continuous PDF Pages (Sequential Scroll) -->
+  <main class="pdf-scroll-viewport" id="pdfViewport">
+
+    <!-- Page 1 -->
+    <article class="pdf-page-wrapper" id="pdfPage1" data-page="1">
+      <div class="page-header-ribbon">
+        <span>Department of Home Affairs ? Subclass 482</span>
+        <span>Page 1 of 3</span>
+      </div>
+      <img 
+        src="assets/images/page1.jpg" 
+        alt="Page 1: Australian Government Department of Home Affairs Temporary Skill Shortage Visa Application" 
+        class="pdf-page-image"
+      />
+      <div class="page-footer-ribbon">
+        <span>Document ID: 1972379837</span>
+      </div>
+    </article>
+
+    <!-- Page 2 -->
+    <article class="pdf-page-wrapper" id="pdfPage2" data-page="2">
+      <div class="page-header-ribbon">
+        <span>Employment Contract ? Section A</span>
+        <span>Page 2 of 3</span>
+      </div>
+      <img 
+        src="assets/images/page2.jpg" 
+        alt="Page 2: Employment Contract Part 1" 
+        class="pdf-page-image"
+      />
+      <div class="page-footer-ribbon">
+        <span>Employment Contract ? Page 1 of 2</span>
+      </div>
+    </article>
+
+    <!-- Page 3 -->
+    <article class="pdf-page-wrapper" id="pdfPage3" data-page="3">
+      <div class="page-header-ribbon">
+        <span>Employment Contract ? Section B</span>
+        <span>Page 3 of 3</span>
+      </div>
+      <img 
+        src="assets/images/page3.jpg" 
+        alt="Page 3: Employment Contract Part 2" 
+        class="pdf-page-image"
+      />
+      <div class="page-footer-ribbon">
+        <span>Employment Contract ? Page 2 of 2 (End of Document)</span>
+      </div>
+    </article>
+
+  </main>
+
+  <script>
+    // Update Page Indicator as user scrolls
+    const pageIndicator = document.getElementById('pageIndicator');
+    const pages = document.querySelectorAll('.pdf-page-wrapper');
+    const viewport = document.getElementById('pdfViewport');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+
+    let currentWidth = 860;
+
+    zoomInBtn.addEventListener('click', () => {
+      if (currentWidth < 1200) {
+        currentWidth += 80;
+        viewport.style.maxWidth = currentWidth + 'px';
+      }
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+      if (currentWidth > 500) {
+        currentWidth -= 80;
+        viewport.style.maxWidth = currentWidth + 'px';
+      }
+    });
+
+    // IntersectionObserver to detect currently visible page
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const pageNum = entry.target.getAttribute('data-page');
+          if (pageNum) {
+            pageIndicator.textContent = 'Page ' + pageNum + ' of 3';
+          }
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0.4
+    });
+
+    pages.forEach(p => observer.observe(p));
+  </script>
+</body>
+</html>

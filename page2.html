@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Employment Contract Page 1 - Terms and Conditions">
+  <title>Page 2 - Employment Contract (Part 1)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- PREV arrow: returns to page 1 -->
+  <a href="page1.html" class="nav-arrow prev-arrow" aria-label="Go to Page 1" data-tooltip="Previous Page">
+    <svg viewBox="0 0 24 24">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </a>
+
+  <!-- NEXT arrow: advances to page 3 -->
+  <a href="page3.html" class="nav-arrow next-arrow" aria-label="Go to Page 3" data-tooltip="Next Page">
+    <svg viewBox="0 0 24 24">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </a>
+
+  <!-- Document Viewport -->
+  <main class="viewer-main">
+    <div class="document-stage">
+      <div class="document-card">
+        <div class="document-page active">
+          <div class="image-canvas">
+            <img 
+              src="assets/images/page2.jpg" 
+              alt="Employment Contract - Profit Generation, Strategy, Workplace, Working Hours, Salary, Benefits" 
+              class="page-display-img"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Control Dock -->
+  <nav class="control-dock" aria-label="Page Controls">
+    <span class="page-counter-badge">Page 2 of 3</span>
+    <div class="pagination-dots">
+      <a href="page1.html" class="page-dot" title="Page 1"></a>
+      <a href="page2.html" class="page-dot active" title="Page 2"></a>
+      <a href="page3.html" class="page-dot" title="Page 3"></a>
+    </div>
+  </nav>
+
+  <script>
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        window.location.href = 'page3.html';
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        window.location.href = 'page1.html';
+      }
+    });
+  </script>
+</body>
+</html>

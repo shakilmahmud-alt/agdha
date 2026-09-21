@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Temporary Skill Shortage visa application - Department of Home Affairs">
+  <title>Page 1 - Visa Application Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Only NEXT arrow is present on Page 1 -->
+  <a href="page2.html" class="nav-arrow next-arrow" aria-label="Go to Page 2" data-tooltip="Next Page">
+    <svg viewBox="0 0 24 24">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </a>
+
+  
+  <!-- Document Viewport -->
+  <main class="viewer-main">
+    <div class="document-stage">
+      <div class="document-card">
+        <div class="document-page active">
+          <!-- QR Code placed above document on one side -->
+          <div class="image-canvas">
+            <img 
+              src="assets/images/page1.jpg" 
+              alt="Australian Government Department of Home Affairs - Temporary Skill Shortage (subclass 482) visa application" 
+              class="page-display-img"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Control Dock -->
+  <nav class="control-dock" aria-label="Page Controls">
+    <span class="page-counter-badge">Page 1 of 3</span>
+    <div class="pagination-dots">
+      <a href="page1.html" class="page-dot active" title="Page 1"></a>
+      <a href="page2.html" class="page-dot" title="Page 2"></a>
+      <a href="page3.html" class="page-dot" title="Page 3"></a>
+    </div>
+  </nav>
+
+  <script>
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        window.location.href = 'page2.html';
+      }
+    });
+  </script>
+</body>
+</html>
