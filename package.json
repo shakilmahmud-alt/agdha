@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Interactive multi-page document viewer with arrow navigation",
   "scripts": {
+    "build": "echo 'Static build complete'",
     "start": "node local-server.js"
   },
   "keywords": [
