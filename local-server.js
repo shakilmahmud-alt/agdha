@@ -31,7 +31,7 @@ function requestHandler(req, res) {
     pathname = '/index.html';
   }
 
-  const safePath = path.normalize(path.join(ROOT_DIR, pathname));
+  let safePath = path.normalize(path.join(ROOT_DIR, pathname));
 
   // Security check: stay inside ROOT_DIR
   if (!safePath.startsWith(ROOT_DIR)) {
@@ -40,11 +40,17 @@ function requestHandler(req, res) {
     return;
   }
 
+  // Check if file exists, or if appending .html works (Clean URLs support)
   fs.stat(safePath, (err, stats) => {
     if (err || !stats.isFile()) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
-      return;
+      const htmlCandidate = safePath + '.html';
+      if (fs.existsSync(htmlCandidate) && fs.statSync(htmlCandidate).isFile()) {
+        safePath = htmlCandidate;
+      } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+        return;
+      }
     }
 
     const ext = path.extname(safePath).toLowerCase();
@@ -52,7 +58,6 @@ function requestHandler(req, res) {
 
     res.writeHead(200, {
       'Content-Type': contentType,
-      'Content-Length': stats.size,
       'Cache-Control': 'no-cache'
     });
 
@@ -66,17 +71,12 @@ function startServer(port) {
 
   server.listen(port, () => {
     console.log('====================================================');
-    console.log(`?? Localhost Server is running!`);
-    console.log(`?? Interactive App:  http://localhost:${port}/`);
-    console.log(`?? Page 1 (Direct):   http://localhost:${port}/page1.html`);
-    console.log(`?? Page 2 (Direct):   http://localhost:${port}/page2.html`);
-    console.log(`?? Page 3 (Direct):   http://localhost:${port}/page3.html`);
+    console.log(`?? Local Server running: http://localhost:${port}/`);
     console.log('====================================================');
   });
 
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-      console.log(`Port ${port} is in use, trying port ${port + 1}...`);
       startServer(port + 1);
     } else {
       console.error('Server error:', err);
