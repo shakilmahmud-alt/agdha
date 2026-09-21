@@ -9,6 +9,355 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-color: #090d16;
+  --bg-gradient: radial-gradient(circle at 50% 20%, #172238 0%, #090d16 80%);
+  --surface-glass: rgba(18, 25, 41, 0.88);
+  --surface-border: rgba(255, 255, 255, 0.14);
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --primary-glow: rgba(59, 130, 246, 0.45);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --paper-bg: #ffffff;
+  --paper-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-color);
+  background-image: var(--bg-gradient);
+  min-height: 100vh;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* Main Viewer Layout - Snug and centered with minimal top spacing */
+.viewer-main {
+  width: 100%;
+  max-width: 1300px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 14px 90px 80px 90px;
+}
+
+/* Big Navigation Arrow Buttons */
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(18, 25, 41, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  transition: var(--transition-smooth);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  outline: none;
+}
+
+.nav-arrow svg {
+  width: 28px;
+  height: 28px;
+  stroke: #ffffff;
+  stroke-width: 2.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.25s ease;
+}
+
+.nav-arrow.prev-arrow {
+  left: 32px;
+}
+
+.nav-arrow.prev-arrow:hover svg {
+  transform: translateX(-4px);
+}
+
+.nav-arrow.next-arrow {
+  right: 32px;
+}
+
+.nav-arrow.next-arrow:hover svg {
+  transform: translateX(4px);
+}
+
+.nav-arrow:hover {
+  background: var(--primary);
+  border-color: #93c5fd;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 14px 35px var(--primary-glow);
+}
+
+.nav-arrow:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+/* Tooltip on arrow buttons */
+.nav-arrow::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) scale(0.85);
+  opacity: 0;
+  pointer-events: none;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f8fafc;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: var(--transition-smooth);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.nav-arrow:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Hide arrow when not applicable */
+.nav-arrow.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-50%) scale(0.65);
+}
+
+/* Document Stage */
+.document-stage {
+  position: relative;
+  width: 100%;
+  max-width: 840px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.document-card {
+  width: 100%;
+  background: var(--paper-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--paper-shadow);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Pages in interactive mode */
+.document-page {
+  display: none;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(12px) scale(0.99);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.document-page.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.image-canvas {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  padding: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.page-display-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 4px;
+  image-rendering: -webkit-optimize-contrast;
+  transition: transform 0.2s ease-out;
+  cursor: zoom-in;
+}
+
+.page-display-img.zoomed {
+  cursor: zoom-out;
+}
+
+/* Bottom Floating Control Dock */
+.control-dock {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.page-counter-badge {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.02em;
+}
+
+.pagination-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: inline-block;
+}
+
+.page-dot.active {
+  width: 24px;
+  border-radius: 9999px;
+  background: var(--primary);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.dock-separator {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dock-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tool-button {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.tool-button svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+.tool-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.tool-button:active {
+  transform: scale(0.94);
+}
+
+/* Mobile responsive rules */
+@media (max-width: 768px) {
+  .viewer-main {
+    padding: 10px 8px 80px 8px;
+  }
+  .nav-arrow {
+    width: 48px;
+    height: 48px;
+  }
+  .nav-arrow.prev-arrow {
+    left: 10px;
+  }
+  .nav-arrow.next-arrow {
+    right: 10px;
+  }
+  .nav-arrow svg {
+    width: 22px;
+    height: 22px;
+  }
+  .control-dock {
+    bottom: 14px;
+    padding: 6px 14px;
+    gap: 12px;
+  }
+}
+
+/* Print view */
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+  .nav-arrow, .control-dock {
+    display: none !important;
+  }
+  .document-page {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+    page-break-after: always;
+  }
+  .document-card {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+  </style>
 </head>
 <body>
 
@@ -28,7 +377,7 @@
           <!-- QR Code placed above document on one side -->
           <div class="image-canvas">
             <img 
-              src="/assets/images/page1.jpg" 
+              src="/assets/images/page1.jpg" onerror="this.onerror=null; this.src='/page1.jpg';" 
               alt="Australian Government Department of Home Affairs - Temporary Skill Shortage (subclass 482) visa application" 
               class="page-display-img"
             />

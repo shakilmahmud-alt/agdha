@@ -7,8 +7,8 @@ function copyRecursiveSync(src, dest) {
   const isDirectory = exists && stats.isDirectory();
   if (isDirectory) {
     if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
-    fs.readdirSync(src).forEach((childItemName) => {
-      copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
+    fs.readdirSync(src).forEach((child) => {
+      copyRecursiveSync(path.join(src, child), path.join(dest, child));
     });
   } else {
     const destDir = path.dirname(dest);
@@ -17,7 +17,23 @@ function copyRecursiveSync(src, dest) {
   }
 }
 
-const items = ['index.html', 'page1.html', 'page2.html', 'page3.html', 'pdf-view.html', 'css', 'js', 'assets'];
+const items = [
+  'index.html',
+  'page1.html',
+  'page2.html',
+  'page3.html',
+  'pdf-view.html',
+  'page1.jpg',
+  'page2.jpg',
+  'page3.jpg',
+  'qr-code.png',
+  'qr-code.svg',
+  'styles.css',
+  'app.js',
+  'css',
+  'js',
+  'assets'
+];
 
 ['dist', 'public'].forEach(targetDir => {
   items.forEach(item => {
@@ -29,4 +45,4 @@ const items = ['index.html', 'page1.html', 'page2.html', 'page3.html', 'pdf-view
   });
 });
 
-console.log('Build complete! dist and public created successfully.');
+console.log('Build complete! dist and public populated with latest assets.');
