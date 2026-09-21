@@ -2,9 +2,9 @@
   "name": "arif-document-viewer",
   "version": "1.0.0",
   "description": "Interactive multi-page document viewer with arrow navigation",
+  "main": "server.js",
   "scripts": {
-    "build": "node build.js",
-    "start": "node local-server.js"
+    "start": "node server.js"
   },
   "keywords": [
     "document-viewer",
